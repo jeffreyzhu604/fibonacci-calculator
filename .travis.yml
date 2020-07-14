@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t jeffreyzhu/test -f ./client/Dockerfile.dev ./client
+
+scripts:
+  - docker run jeffreyzhu/test npm test -- --coverage
+
+after_success:
+  - docker build -t jeffreyzhu/client ./client
+  - docker build -t jeffreyzhu/nginx ./nginx
+  - docker build -t jeffreyzhu/server ./server
+  - docker build -t jeffreyzhu/worker ./worker
+  # Log in to the Docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take the images and push to docker hub
+  - docker push jeffreyzhu/client 
+  - docker push jeffreyzhu/nginx
+  - docker push jeffreyzhu/server 
+  - docker push jeffreyzhu/worker
