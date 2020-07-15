@@ -28,7 +28,7 @@ deploy:
   app: fibonacci-calculator
   env: FibonacciCalculator-env-1
   bucket_name: elasticbeanstalk-us-east-2-936490621422
-  bucket_path: docker-multi
+  bucket_path: docker-react
   on:
     branch: master
   access_key_id: $AWS_ACCESS_KEY
