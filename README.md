@@ -7,6 +7,7 @@
 - Redis
 - PostgreSQL
 - Docker
+- Kubernetes
 - Travis CI
 - AWS Elastic Beanstalk
 
