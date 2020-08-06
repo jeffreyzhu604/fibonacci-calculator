@@ -9,6 +9,6 @@
 - Docker
 - Kubernetes
 - Travis CI
-- AWS Elastic Beanstalk
+- Google Cloud Platform utilizing the Kubernetes Engine
 
 # Learning Outcome
