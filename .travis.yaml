@@ -1,0 +1,41 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
+before_install:
+  # Download and install Google SDK
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  # Look into the default install directory of Google SDK
+  # There are some configuration that will modify the shell inside Travis CI
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  # Install the kubectl inside the Travis CI environment
+  - gcloud components update kubectl
+  # Authorization with Google Cloud
+  - gcloud auth activate-service-account --key-file service-account.json
+  # Tell Google Cloud which project to work on
+  # Use project ID, not the project name
+  # NEED TO UPDATE
+  - gcloud config set project skilful-berm-1213
+  # Specify compute zone
+  # NEED TO UPDATE
+  - gcloud config set compute/zone us-central1-a
+  # Tell Google Cloud exactly what cluster it needs to be working with
+  # if we issue any kubernetes related commands
+  - gcloud container clusters get-credentials multi-cluster
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t jeffreyzhu/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true jeffreyzhu/docker-react npm run test
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on: 
+    branch: master
