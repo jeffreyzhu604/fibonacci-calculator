@@ -1,0 +1,39 @@
+# For local development of Kubernetes
+
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    push: false
+  artifacts:
+    # Should have nodemon as a dependency, which is 3rd party library that watches changes
+    - image: jeffreyzhu/client
+      context: client
+      docker: 
+        dockerfile: Dockerfile.dev
+      sync:
+        # Everytime skaffold sees a JavaScript file change take that file and throw it in container
+        '**/*.js': .
+        '**/*.css': .
+        '**/*.html': .
+    - image: jeffreyzhu/server
+      context: server
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        '**/*.js': .
+    - image: jeffreyzhu/worker
+      context: worker
+      docker:  
+        dockerfile: Dockerfile.dev
+      sync:
+        '**/*.js': .
+deploy:
+  kubectl:
+    manifests:
+      # Do not include if you don't want persistent data or volumes deleted
+      - k8s/client-deployment.yaml
+      - k8s/server-deployment.yaml
+      - k8s/worker-deployment.yaml
+      - k8s/service-cluster-ip-service.yaml
+      - k8s/client-cluster-ip-service.yaml
