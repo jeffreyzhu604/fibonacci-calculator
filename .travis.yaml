@@ -21,10 +21,10 @@ before_install:
   # Tell Google Cloud which project to work on
   # Use project ID, not the project name
   # NEED TO UPDATE
-  - gcloud config set project skilful-berm-1213
+  - gcloud config set project fibonacci-calculator-285600
   # Specify compute zone
   # NEED TO UPDATE
-  - gcloud config set compute/zone us-central1-a
+  - gcloud config set compute/zone us-west1-a	
   # Tell Google Cloud exactly what cluster it needs to be working with
   # if we issue any kubernetes related commands
   - gcloud container clusters get-credentials multi-cluster
